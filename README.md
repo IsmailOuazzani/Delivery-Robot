@@ -124,6 +124,27 @@ this last problem, although we hypothesize that something might be missing from 
 activation logic.
 
 
+# Future Improvements
+In terms of hardware, a better camera (higher resolution) can improve both PID control and color
+detection. Fusing the information from multiple cameras could also decrease the error.
+Another improvement for color detection is the use a Decision-based tree model to assign a color
+based on the sensor measurement. It would be more resilient against changes in lighting and color
+shade. It would also give insight into why a color is selected instead of another one - by using metrics
+such as the SHAP values - which could help to build a better test setup.
+We noticed that color detection is sensitive to lighting conditions (such as a person moving above
+the robot), and abrupt changes can cause errors. To fix this issue, we could use a physical cone around
+the camera, combined with a portable light, and modify the algorithm that measures the color to only
+measure a subset of the entire image (where we don’t see the cone).
+
+# Conclusion
+Altogether, this proof-of-concept demonstration was an opportunity for us to deepen our understanding of Bayesian localization while strengthening our skills in prototyping and debugging, all of which
+are essential to becoming a seasoned roboticist.
+A key idea that we learned is to build incrementally small components that fit together. We could
+have tried to build the entire project from the start, but having built and tested each element separately - the PID control, color detection, and bayesian localization - allowed us to pinpoint issues and
+make steady progress, which are important in terms of efficiency.
+
+
+
 
 
 
