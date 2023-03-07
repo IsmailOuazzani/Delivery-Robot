@@ -1,3 +1,5 @@
+# Introduction
+
 # Robot Platform
 We worked with a TurtleBot3 Waffle Pi equipped with the Pi Camera, pointed downward to examine
 the area underneath the robot. The camera is useful when mounted this way as it can be used for line
@@ -104,6 +106,23 @@ deviated while moving across the office, it could be corrected before it was too
 mean index of ”black” labels in the list. If the mean was toward the end of the list, it meant that we
 were getting new black measurements, i.e. that the robot was leaving the office, so we turned on the
 PID.
+
+# Performance Analysis
+Our Bayesian localization code successfully converged
+after 3 offices were visited and our robot was able to detect the office color with 100% accuracy. The
+following graphs show a sample robot prediction when it starts at office 9. The initial distribution
+is uniform. The robot measures orange then yellow. It converges to office 10 as {9,10} is the only
+sequence containing orange then yellow in the topological map (See introduction).
+
+| ![baylocpred0](https://user-images.githubusercontent.com/74887266/223527480-1ce1b6f6-561b-44bc-83c3-3acbec4129c3.png) | ![bayloc0](https://user-images.githubusercontent.com/74887266/223527502-4704b784-12f7-4df5-ba56-8db89112f31f.png) | ![bayloc1](https://user-images.githubusercontent.com/74887266/223527515-79d90084-4b5d-4975-b3c5-7b148af6d7ad.png) |
+|-----------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------|
+
+
+We only noticed some small problems with our PID controller and the color orange. On orange
+officies, the robot would not turn of PID in time in 40% of the cases. We did not have time to debug
+this last problem, although we hypothesize that something might be missing from our PID controller
+activation logic.
+
 
 
 
