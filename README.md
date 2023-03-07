@@ -1,4 +1,12 @@
 # Introduction
+We design the control to simulate a Mail Delivery Robot, as the final project of our robotics class.
+We are given a topological map of an office track, and enable a robot to stop at the instructed offices by implementing both Bayesian Localization and a PID controller.  The offices, numbered from 1 to 12 are unique but their color (sensor reading) is not. They are connected by a black line that the robot follows.
+
+<div id="a" align="center">
+<img src="https://user-images.githubusercontent.com/74887266/223531741-035bf93e-006e-4a24-82b2-7580a2d9e9f0.PNG"  width="30%" height="15%">
+  
+  <h5>Topological map</h5>
+</div>
 
 # Robot Platform
 We worked with a TurtleBot3 Waffle Pi equipped with the Pi Camera, pointed downward to examine
@@ -114,9 +122,12 @@ following graphs show a sample robot prediction when it starts at office 9. The 
 is uniform. The robot measures orange then yellow. It converges to office 10 as {9,10} is the only
 sequence containing orange then yellow in the topological map (See introduction).
 
+
 | ![baylocpred0](https://user-images.githubusercontent.com/74887266/223527480-1ce1b6f6-561b-44bc-83c3-3acbec4129c3.png) | ![bayloc0](https://user-images.githubusercontent.com/74887266/223527502-4704b784-12f7-4df5-ba56-8db89112f31f.png) | ![bayloc1](https://user-images.githubusercontent.com/74887266/223527515-79d90084-4b5d-4975-b3c5-7b148af6d7ad.png) |
 |-----------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------|
-
+<div id="b" align="center">
+<h5>Bayesian Localization Model</h5>
+</div>
 
 We only noticed some small problems with our PID controller and the color orange. On orange
 officies, the robot would not turn of PID in time in 40% of the cases. We did not have time to debug
