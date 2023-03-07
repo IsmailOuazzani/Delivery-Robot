@@ -34,6 +34,78 @@ start from any location. We expect the model to converge to the
 right position after some offices have been visited. We therefore keep looping around the track until the model becomes
 confident enough in its current state.
 
+## Comments on implementation
+Our PID controller was tested in previous labs so we expect it
+to be straightforward to implement. We will first implement
+our Bayesian model on its own, and ensure its functioning by
+simulating a virtual track. This will allow us to debug it without having to test it on the robot. We expect color detection to
+be the harder part of the lab. This is the solution we identified.
+The color detected by the camera at any point is one of
+the following: black, blue, green, yellow or orange. We will
+therefore provide the RGB values of such colors to our robot.
+We calibrate the RGB values corresponding to the colors of the
+offices based on the mean of several observations taken form the
+track. When we run the robot we will then compare the colour measured by the robot to the provided
+ones, and determine which on it is the most similar to. We have different ideas to determine such
+similarity. We will converge on the best one in later sections. We will test
+
+- **Norm of Differences:** Take the difference between the measured value and one of the provided
+values, and calculate the norm of the final vector. The measured value will be the one with the
+smallest norm.
+- **Cosine Similarity:** Determine the angle between the measured rgb value and the provided
+values. The measured value will be the one with the smallest angle.
+
+# Methods
+
+## Bayesian Localization
+
+We implemented the code by following the theory behind Bayesian localization. When testing it on
+the robot, we noticed that no matter the starting position, it took the same number of offices visited
+to confidently converge to the correct one. We therefore decided to implement a threshold: our robot
+would ”be certain” of its localization only after exploring three offices. This simplified the logic of our
+code while still reducing the risk of stopping at the wrong office.
+
+
+## Improving color detection
+### HSV format
+We noticed that the RGB values of the colors were very close to each other, and both methods listed
+above failed to determine similar colors consistently. We therefore switched to HSV values as they
+allowed more distinction between colors than RGB. Out of the options described earlier, we chose
+cosine similarity as it provided more accurate results.
+
+### Robot add-ons
+We tried other approaches to reduce the error in color detection such as using a physical cone made
+of paper to have constant lighting, or using a portable light placed on top of the camera. Both of
+those approaches made color detection slightly worse. The failure of the cone to produce accurate
+measurements was likely caused by the fact that it appeared in the camera field of view and it distorted
+the values of the color detected. The portable light made the floor too shiny and negatively impacted
+the color detected as well.
+### Color Filtering
+When entering a new office, we noticed a transient period during which multiple colors were detected
+one after the other. We therefore created a list (COLOR-LIST) containing the last K detected colors
+measured by the camera. When a new color was detected, we appended it to the end of the list and
+popped the first element. We only changed the current color variable, indicating the color the robot
+thought it was on, when all the colors in that list were the same. For example, if the robot was on
+the line and it is now starting to see an orange office. COLOR-LIST, if K = 5, will probably look like
+[”black, ”black, ”yellow”, ”orange”, ”orange”]. In this case current color is still ”black”. Only when
+COLOR-LIST = [”orange”, ”orange”,”orange”, ”orange”,”orange”] the current color will be equal to
+”orange”.
+Even after this modification, our robot struggled to detect the black line after specific colors. For
+example, after crossing a yellow office, our robot tent to confuse the line with blue. Therefore, we
+hard-coded the fact that after visiting an office, the next color measured had to be black, and we
+disregarded all other measurements.
+### PID Control Activation
+The introduction of color filtering introduced some problems in our PID system as it was disengaging
+too late: when entering the office, the robot would twitch. To fix this issue, we stopped the PID
+controller when at least 27% of the values contained in COLOR-LIST were not black (we found this
+value through trial and error).
+Similarly, we wanted to start the PID at the right time after leaving an office so that if the robot
+deviated while moving across the office, it could be corrected before it was too late. We looked at the
+mean index of ”black” labels in the list. If the mean was toward the end of the list, it meant that we
+were getting new black measurements, i.e. that the robot was leaving the office, so we turned on the
+PID.
+
+
 
 
 
